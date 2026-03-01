@@ -1,6 +1,8 @@
-import { ShoppingBag, Search, Menu, X, ArrowRight, Star, FileText, MonitorPlay, ArrowDown, ChevronLeft, Check, StarHalf, Trash2, Copy, ExternalLink } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { ShoppingBag, Search, Menu, X, ArrowRight, Star, FileText, MonitorPlay, ArrowDown, ChevronLeft, Check, StarHalf, Trash2, Copy, ExternalLink, User as UserIcon, LogOut } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+import { supabase } from './lib/supabase';
+import { User } from '@supabase/supabase-js';
 
 // --- Mock Data & Interfaces ---
 
@@ -149,7 +151,21 @@ const formatPrice = (price: number) => {
 
 // --- Components ---
 
-const Navbar = ({ onHomeClick, cartCount, onCartClick }: { onHomeClick: () => void, cartCount: number, onCartClick: () => void }) => {
+const Navbar = ({ 
+  onHomeClick, 
+  cartCount, 
+  onCartClick,
+  user,
+  onLoginClick,
+  onLogoutClick
+}: { 
+  onHomeClick: () => void, 
+  cartCount: number, 
+  onCartClick: () => void,
+  user: User | null,
+  onLoginClick: () => void,
+  onLogoutClick: () => void
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -192,6 +208,31 @@ const Navbar = ({ onHomeClick, cartCount, onCartClick }: { onHomeClick: () => vo
               </motion.button>
             ))}
             <div className="flex items-center space-x-2 border-l border-black/10 pl-6">
+              {user ? (
+                <div className="relative group">
+                  <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="p-2 hover:bg-pink-50 rounded-full transition-colors flex items-center gap-2">
+                    <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold uppercase">
+                      {user.email?.charAt(0) || 'U'}
+                    </div>
+                  </motion.button>
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
+                    <div className="p-3 border-b border-black/10 text-xs text-gray-500 truncate">
+                      {user.email}
+                    </div>
+                    <button onClick={onLogoutClick} className="w-full text-left px-4 py-2 text-sm font-bold hover:bg-pink-50 transition-colors flex items-center gap-2">
+                      <LogOut size={14} /> Sair
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <motion.button 
+                  onClick={onLoginClick}
+                  whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} 
+                  className="px-4 py-1.5 border-2 border-black font-bold text-sm uppercase tracking-widest hover:bg-pink-100 transition-colors shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] mr-2"
+                >
+                  Entrar
+                </motion.button>
+              )}
               <motion.button whileHover={{ scale: 1.1, rotate: 5 }} whileTap={{ scale: 0.9 }} className="p-2 hover:bg-pink-50 rounded-full transition-colors">
                 <Search className="w-5 h-5" />
               </motion.button>
@@ -216,6 +257,15 @@ const Navbar = ({ onHomeClick, cartCount, onCartClick }: { onHomeClick: () => vo
           </div>
 
           <div className="md:hidden flex items-center gap-4">
+            {user ? (
+              <button onClick={onLogoutClick} className="p-2 text-gray-600">
+                <LogOut className="w-5 h-5" />
+              </button>
+            ) : (
+              <button onClick={onLoginClick} className="p-2 text-gray-600">
+                <UserIcon className="w-5 h-5" />
+              </button>
+            )}
             <button onClick={onCartClick} className="relative p-2">
               <ShoppingBag className="w-6 h-6" />
               {cartCount > 0 && (
@@ -655,12 +705,14 @@ const ProductDetails = ({
   product, 
   onBack, 
   onAddToCart,
-  onBuyNow
+  onBuyNow,
+  onWriteReview
 }: { 
   product: Product, 
   onBack: () => void,
   onAddToCart: (p: Product, q: number) => void,
   onBuyNow: (p: Product, q: number) => void,
+  onWriteReview: (p: Product) => void,
   key?: string | number
 }) => {
   const [mainImage, setMainImage] = useState(product.images[0]);
@@ -823,7 +875,10 @@ const ProductDetails = ({
                 </div>
               </div>
             </div>
-            <button className="px-6 py-3 border-2 border-black font-bold uppercase text-sm tracking-widest hover:bg-pink-100 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+            <button 
+              onClick={() => onWriteReview(product)}
+              className="px-6 py-3 border-2 border-black font-bold uppercase text-sm tracking-widest hover:bg-pink-100 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+            >
               Escrever Avaliação
             </button>
           </div>
@@ -978,6 +1033,179 @@ const Footer = () => {
   );
 };
 
+const AuthModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!supabase) {
+      setError('Supabase não configurado. Verifique as variáveis de ambiente.');
+      return;
+    }
+    setLoading(true);
+    setError('');
+
+    try {
+      if (isLogin) {
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+        alert('Confirme seu email para continuar!');
+      }
+      onClose();
+    } catch (err: any) {
+      setError(err.message || 'Ocorreu um erro.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0, y: 20 }} 
+        animate={{ scale: 1, opacity: 1, y: 0 }} 
+        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-w-sm w-full overflow-hidden flex flex-col"
+      >
+        <div className="p-6 border-b-2 border-black bg-pink-50 relative">
+          <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-black hover:text-white border-2 border-transparent hover:border-black rounded-full transition-all">
+            <X size={20} />
+          </button>
+          <h2 className="font-serif text-3xl italic font-bold mb-2">
+            {isLogin ? 'Bem-vindo de volta' : 'Crie sua conta'}
+          </h2>
+          <p className="text-sm text-gray-600">
+            {isLogin ? 'Entre para avaliar produtos e ver seus pedidos.' : 'Junte-se a milhares de estudantes.'}
+          </p>
+        </div>
+
+        <div className="p-6">
+          {error && <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-sm">{error}</div>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest mb-1">Email</label>
+              <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border-2 border-black p-3 text-sm outline-none focus:border-pink-500 transition-colors"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest mb-1">Senha</label>
+              <input 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border-2 border-black p-3 text-sm outline-none focus:border-pink-500 transition-colors"
+                required
+              />
+            </div>
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="w-full py-3 bg-black text-white border-2 border-black font-bold uppercase tracking-widest text-sm shadow-[4px_4px_0px_0px_rgba(244,114,182,1)] hover:bg-gray-900 disabled:opacity-50"
+            >
+              {loading ? 'Aguarde...' : (isLogin ? 'Entrar' : 'Cadastrar')}
+            </button>
+          </form>
+          
+          <div className="mt-6 text-center text-sm">
+            <span className="text-gray-600">
+              {isLogin ? 'Não tem uma conta?' : 'Já tem uma conta?'}
+            </span>
+            <button 
+              onClick={() => setIsLogin(!isLogin)}
+              className="ml-2 font-bold underline decoration-pink-300 decoration-2 underline-offset-4"
+            >
+              {isLogin ? 'Cadastre-se' : 'Entre'}
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
+const ReviewModal = ({ isOpen, onClose, product }: { isOpen: boolean, onClose: () => void, product: Product | null }) => {
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState('');
+
+  if (!isOpen || !product) return null;
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In a real app, you would save this to Supabase here
+    alert('Avaliação enviada com sucesso! (Simulação)');
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0, y: 20 }} 
+        animate={{ scale: 1, opacity: 1, y: 0 }} 
+        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-w-md w-full overflow-hidden flex flex-col"
+      >
+        <div className="p-6 border-b-2 border-black bg-pink-50 relative">
+          <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-black hover:text-white border-2 border-transparent hover:border-black rounded-full transition-all">
+            <X size={20} />
+          </button>
+          <h2 className="font-serif text-2xl italic font-bold mb-2">Avaliar Produto</h2>
+          <p className="text-sm text-gray-600 truncate">{product.title}</p>
+        </div>
+
+        <div className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest mb-2">Sua Nota</label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button 
+                    key={star} 
+                    type="button"
+                    onClick={() => setRating(star)}
+                    className="focus:outline-none transition-transform hover:scale-110"
+                  >
+                    <Star size={28} className={star <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"} />
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest mb-2">Seu Comentário</label>
+              <textarea 
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                className="w-full border-2 border-black p-3 text-sm outline-none focus:border-pink-500 transition-colors resize-none h-32"
+                placeholder="O que você achou deste material?"
+                required
+              />
+            </div>
+            <button 
+              type="submit" 
+              className="w-full py-3 bg-black text-white border-2 border-black font-bold uppercase tracking-widest text-sm shadow-[4px_4px_0px_0px_rgba(244,114,182,1)] hover:bg-gray-900"
+            >
+              Enviar Avaliação
+            </button>
+          </form>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -986,6 +1214,41 @@ export default function App() {
   // Checkout Modal State
   const [isCheckoutModalOpen, setIsCheckoutModalOpen] = useState(false);
   const [checkoutMessage, setCheckoutMessage] = useState("");
+
+  // Auth & Review State
+  const [user, setUser] = useState<User | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [productToReview, setProductToReview] = useState<Product | null>(null);
+
+  useEffect(() => {
+    if (supabase) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setUser(session?.user ?? null);
+      });
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUser(session?.user ?? null);
+      });
+
+      return () => subscription.unsubscribe();
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    if (supabase) {
+      await supabase.auth.signOut();
+    }
+  };
+
+  const handleWriteReview = (product: Product) => {
+    if (user) {
+      setProductToReview(product);
+      setIsReviewModalOpen(true);
+    } else {
+      setIsAuthModalOpen(true);
+    }
+  };
 
   const handleHomeClick = () => {
     setSelectedProduct(null);
@@ -1065,6 +1328,20 @@ export default function App() {
         onHomeClick={handleHomeClick} 
         cartCount={cartItemsCount} 
         onCartClick={() => setIsCartOpen(true)} 
+        user={user}
+        onLoginClick={() => setIsAuthModalOpen(true)}
+        onLogoutClick={handleLogout}
+      />
+      
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
+
+      <ReviewModal 
+        isOpen={isReviewModalOpen} 
+        onClose={() => setIsReviewModalOpen(false)} 
+        product={productToReview}
       />
       
       <CartSidebar 
@@ -1091,6 +1368,7 @@ export default function App() {
             onBack={handleHomeClick}
             onAddToCart={addToCart}
             onBuyNow={handleBuyNow}
+            onWriteReview={handleWriteReview}
           />
         ) : (
           <motion.div 
