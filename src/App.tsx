@@ -36,106 +36,193 @@ export interface CartItem {
 
 const productsData: Product[] = [
   {
-    id: "planner-2025",
-    title: "Planner Universitário 2025",
-    category: "Notion",
-    price: "R$ 29,90",
-    image: "https://images.unsplash.com/photo-1664382953518-4a664ab8a8c9?q=80&w=800&auto=format&fit=crop",
+    id: "cronograma-estudos",
+    title: "Cronograma de Estudos",
+    category: "Planejamento",
+    price: "R$ 8,00",
+    image: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=800&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1664382953518-4a664ab8a8c9?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1611224923853-80b023f02d71?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=800&auto=format&fit=crop"
     ],
     type: "template",
-    description: "O sistema definitivo no Notion para organizar sua vida acadêmica. Chega de perder prazos ou esquecer trabalhos. Este template foi desenhado com uma estética minimalista e clean, focado em produtividade sem distrações.",
+    description: "Planejamento personalizado para organizar sua rotina, matérias e prazos. Ideal para mais foco e produtividade.",
     features: [
-      "Dashboard central com visão semanal",
-      "Rastreador de hábitos e rotina",
-      "Gestor de disciplinas e notas",
-      "Calendário de provas e entregas",
-      "Espaço para anotações de aulas (Método Cornell)"
+      "Organização de rotina",
+      "Distribuição de matérias",
+      "Controle de prazos",
+      "Foco e produtividade"
     ],
-    rating: 4.9,
-    reviewsCount: 128,
-    reviews: [
-      { id: 1, user: "Mariana S.", rating: 5, date: "12 Fev 2026", comment: "Simplesmente perfeito! Mudou completamente a forma como me organizo na faculdade. A estética é linda." },
-      { id: 2, user: "Lucas M.", rating: 5, date: "05 Fev 2026", comment: "Muito fácil de usar e personalizar. Vale cada centavo." },
-      { id: 3, user: "Beatriz C.", rating: 4, date: "28 Jan 2026", comment: "Ótimo template, mas demorei um pouquinho para entender como linkar as bases de dados. Depois que peguei o jeito, fluiu super bem." }
-    ]
+    rating: 5.0,
+    reviewsCount: 0,
+    reviews: []
   },
   {
-    id: "pack-slides",
-    title: "Pack Slides Minimalistas",
-    category: "PowerPoint",
-    price: "R$ 45,00",
-    image: "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=800&auto=format&fit=crop",
+    id: "pesquisa-texto",
+    title: "Pesquisa (texto simples)",
+    category: "Pesquisa",
+    price: "R$ 12,00",
+    image: "https://images.unsplash.com/photo-1455390582262-044cdead2708?q=80&w=800&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=800&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1455390582262-044cdead2708?q=80&w=800&auto=format&fit=crop"
     ],
-    type: "slide",
-    description: "Apresente seus trabalhos com confiança. Um pacote com mais de 50 slides editáveis no PowerPoint e Google Slides, criados com princípios de design editorial para impressionar qualquer professor.",
+    type: "doc",
+    description: "Conteúdo completo e bem estruturado sobre o tema solicitado. Entregue em texto organizado.",
     features: [
-      "50+ layouts únicos",
-      "Fontes gratuitas inclusas",
-      "Versões claro e escuro",
-      "Fácil edição de cores e fotos",
-      "Proporção 16:9 (Widescreen)"
+      "Conteúdo completo",
+      "Bem estruturado",
+      "Tema personalizado",
+      "Entrega em texto"
     ],
-    rating: 4.7,
-    reviewsCount: 85,
-    reviews: [
-      { id: 1, user: "João P.", rating: 5, date: "10 Fev 2026", comment: "Me salvou no TCC! Os slides são muito profissionais." },
-      { id: 2, user: "Camila R.", rating: 4, date: "02 Fev 2026", comment: "Lindos slides, recomendo." }
-    ]
+    rating: 5.0,
+    reviewsCount: 0,
+    reviews: []
   },
   {
-    id: "resumos-bio",
-    title: "Resumos de Biologia",
-    category: "PDF",
-    price: "R$ 15,90",
+    id: "pesquisa-pdf",
+    title: "Pesquisa em PDF",
+    category: "Pesquisa",
+    price: "R$ 16,00",
+    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?q=80&w=800&auto=format&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1611224923853-80b023f02d71?q=80&w=800&auto=format&fit=crop"
+    ],
+    type: "doc",
+    description: "Material formatado em PDF com capa, organização visual e referências — pronto para estudo ou entrega.",
+    features: [
+      "Formato PDF",
+      "Capa inclusa",
+      "Organização visual",
+      "Referências bibliográficas"
+    ],
+    rating: 5.0,
+    reviewsCount: 0,
+    reviews: []
+  },
+  {
+    id: "resumo-escolar",
+    title: "Resumo Escolar",
+    category: "Resumo",
+    price: "R$ 12,00",
     image: "https://images.unsplash.com/photo-1456735190827-d1262f71b8a6?q=80&w=800&auto=format&fit=crop",
     images: [
       "https://images.unsplash.com/photo-1456735190827-d1262f71b8a6?q=80&w=800&auto=format&fit=crop"
     ],
     type: "doc",
-    description: "Mapas mentais e resumos esquematizados de Biologia para o ENEM e vestibulares. Foco nos temas que mais caem, com ilustrações desenhadas à mão e mnemônicos.",
+    description: "Resumo claro, objetivo e organizado, destacando os pontos principais para facilitar a revisão.",
     features: [
-      "Citologia e Genética",
-      "Botânica e Zoologia",
-      "Ecologia completa",
-      "Alta resolução para impressão",
-      "Formato PDF otimizado"
+      "Claro e objetivo",
+      "Destaque dos pontos principais",
+      "Facilita a revisão",
+      "Organizado"
     ],
     rating: 5.0,
-    reviewsCount: 342,
-    reviews: [
-      { id: 1, user: "Sofia L.", rating: 5, date: "15 Fev 2026", comment: "Os desenhos ajudam DEMAIS a memorizar. Perfeito!" }
-    ]
+    reviewsCount: 0,
+    reviews: []
   },
   {
-    id: "cronograma-estudos",
-    title: "Cronograma de Estudos",
-    category: "Excel",
-    price: "R$ 19,90",
-    image: "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=800&auto=format&fit=crop",
+    id: "mapa-mental",
+    title: "Mapa Mental",
+    category: "Resumo",
+    price: "R$ 10,00",
+    image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop",
     images: [
-      "https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=800&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=800&auto=format&fit=crop"
+      "https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop"
     ],
-    type: "template",
-    description: "Planilha automatizada para montar seu ciclo de estudos. Insira suas matérias, peso de cada uma e horas disponíveis, e a planilha calcula seu cronograma ideal.",
+    type: "doc",
+    description: "Mapa mental organizado e visualmente estratégico para facilitar memorização e entendimento do conteúdo.",
     features: [
-      "Cálculo automático de horas",
-      "Gráficos de desempenho",
-      "Aba de revisão espaçada",
-      "Tutorial em vídeo incluso"
+      "Visualmente estratégico",
+      "Facilita a memorização",
+      "Entendimento rápido",
+      "Organizado"
     ],
-    rating: 4.6,
-    reviewsCount: 56,
-    reviews: [
-      { id: 1, user: "Tiago V.", rating: 5, date: "20 Jan 2026", comment: "A automação dessa planilha é genial. Facilitou muito minha vida." }
-    ]
+    rating: 5.0,
+    reviewsCount: 0,
+    reviews: []
+  },
+  {
+    id: "trabalho-abnt",
+    title: "Trabalho em formato ABNT",
+    category: "Trabalho",
+    price: "R$ 18,00",
+    image: "https://images.unsplash.com/photo-1585776245991-cf89dd7fc73a?q=80&w=800&auto=format&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1585776245991-cf89dd7fc73a?q=80&w=800&auto=format&fit=crop"
+    ],
+    type: "doc",
+    description: "Trabalho completo com formatação nas normas ABNT (capa, sumário, referências e estrutura adequada).",
+    features: [
+      "Normas ABNT",
+      "Capa e sumário",
+      "Referências",
+      "Estrutura adequada"
+    ],
+    rating: 5.0,
+    reviewsCount: 0,
+    reviews: []
+  },
+  {
+    id: "slide-sua-pesquisa",
+    title: "Slide com sua Pesquisa",
+    category: "Slide",
+    price: "R$ 1,50",
+    image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=800&auto=format&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=800&auto=format&fit=crop"
+    ],
+    type: "slide",
+    description: "Você envia o conteúdo e nós transformamos em slides organizados e prontos para apresentar. (Preço por página)",
+    features: [
+      "Design organizado",
+      "Pronto para apresentar",
+      "Baseado no seu conteúdo",
+      "Preço por página"
+    ],
+    rating: 5.0,
+    reviewsCount: 0,
+    reviews: []
+  },
+  {
+    id: "slide-nossa-pesquisa",
+    title: "Slide com nossa Pesquisa",
+    category: "Slide",
+    price: "R$ 2,50",
+    image: "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=800&auto=format&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=800&auto=format&fit=crop"
+    ],
+    type: "slide",
+    description: "A gente faz a pesquisa completa e entregamos slides prontos, estruturados e visualmente atrativos. (Preço por página)",
+    features: [
+      "Pesquisa inclusa",
+      "Estruturado",
+      "Visualmente atrativo",
+      "Preço por página"
+    ],
+    rating: 5.0,
+    reviewsCount: 0,
+    reviews: []
+  },
+  {
+    id: "redacao",
+    title: "Redação",
+    category: "Texto",
+    price: "R$ 16,00",
+    image: "https://images.unsplash.com/photo-1455390582262-044cdead2708?q=80&w=800&auto=format&fit=crop",
+    images: [
+      "https://images.unsplash.com/photo-1455390582262-044cdead2708?q=80&w=800&auto=format&fit=crop"
+    ],
+    type: "doc",
+    description: "Texto bem desenvolvido e estruturado conforme o tema solicitado.",
+    features: [
+      "Bem desenvolvido",
+      "Estruturado",
+      "Tema personalizado",
+      "Pronto para uso"
+    ],
+    rating: 5.0,
+    reviewsCount: 0,
+    reviews: []
   }
 ];
 
