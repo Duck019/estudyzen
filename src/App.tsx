@@ -61,9 +61,9 @@ const productsData: Product[] = [
     title: "Pesquisa (texto simples)",
     category: "Pesquisa",
     price: "R$ 12,00",
-    image: "https://images.unsplash.com/photo-1455390582262-044cdead2708?q=80&w=800&auto=format&fit=crop",
+    image: "https://cdn.discordapp.com/attachments/1422277059723399333/1478135494658490518/IMG-20260301-WA0020.jpg?ex=69a74c74&is=69a5faf4&hm=d292dae4aef7364620e3d7b521069beb985bae9b3a12c2a0a934b94df34be2ea&",
     images: [
-      "https://images.unsplash.com/photo-1455390582262-044cdead2708?q=80&w=800&auto=format&fit=crop"
+      "https://cdn.discordapp.com/attachments/1422277059723399333/1478135494658490518/IMG-20260301-WA0020.jpg?ex=69a74c74&is=69a5faf4&hm=d292dae4aef7364620e3d7b521069beb985bae9b3a12c2a0a934b94df34be2ea&"
     ],
     type: "doc",
     description: "Conteúdo completo e bem estruturado sobre o tema solicitado. Entregue em texto organizado.",
@@ -103,9 +103,9 @@ const productsData: Product[] = [
     title: "Resumo Escolar",
     category: "Resumo",
     price: "R$ 12,00",
-    image: "https://images.unsplash.com/photo-1456735190827-d1262f71b8a6?q=80&w=800&auto=format&fit=crop",
+    image: "https://cdn.discordapp.com/attachments/1422277059723399333/1478135499309973595/IMG-20260301-WA0021.jpg?ex=69a74c75&is=69a5faf5&hm=c2bb3f9ce7505bc75f999fb4428782c6430e38b0eac024563d9fa8448aeb36f6&",
     images: [
-      "https://images.unsplash.com/photo-1456735190827-d1262f71b8a6?q=80&w=800&auto=format&fit=crop"
+      "https://cdn.discordapp.com/attachments/1422277059723399333/1478135499309973595/IMG-20260301-WA0021.jpg?ex=69a74c75&is=69a5faf5&hm=c2bb3f9ce7505bc75f999fb4428782c6430e38b0eac024563d9fa8448aeb36f6&"
     ],
     type: "doc",
     description: "Resumo claro, objetivo e organizado, destacando os pontos principais para facilitar a revisão.",
@@ -166,9 +166,9 @@ const productsData: Product[] = [
     title: "Slide com sua Pesquisa",
     category: "Slide",
     price: "R$ 1,50",
-    image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=800&auto=format&fit=crop",
+    image: "https://cdn.discordapp.com/attachments/1422277059723399333/1478135492129067232/IMG-20260301-WA0019.jpg?ex=69a74c73&is=69a5faf3&hm=1ded5d1708a571866ec5009db012787c03c50492dd6b996e798bddd31f3ef522&",
     images: [
-      "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=800&auto=format&fit=crop"
+      "https://cdn.discordapp.com/attachments/1422277059723399333/1478135492129067232/IMG-20260301-WA0019.jpg?ex=69a74c73&is=69a5faf3&hm=1ded5d1708a571866ec5009db012787c03c50492dd6b996e798bddd31f3ef522&"
     ],
     type: "slide",
     description: "Você envia o conteúdo e nós transformamos em slides organizados e prontos para apresentar. (Preço por página)",
@@ -187,9 +187,9 @@ const productsData: Product[] = [
     title: "Slide com nossa Pesquisa",
     category: "Slide",
     price: "R$ 2,50",
-    image: "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=800&auto=format&fit=crop",
+    image: "https://cdn.discordapp.com/attachments/1422277059723399333/1478135486227939429/IMG-20260301-WA0018.jpg?ex=69a74c72&is=69a5faf2&hm=d1d6bd54009f98111c4ec9a3dc1da47a7c98d23e011b3850c5c52d8479a3b8e3&",
     images: [
-      "https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=800&auto=format&fit=crop"
+      "https://cdn.discordapp.com/attachments/1422277059723399333/1478135486227939429/IMG-20260301-WA0018.jpg?ex=69a74c72&is=69a5faf2&hm=d1d6bd54009f98111c4ec9a3dc1da47a7c98d23e011b3850c5c52d8479a3b8e3&"
     ],
     type: "slide",
     description: "A gente faz a pesquisa completa e entregamos slides prontos, estruturados e visualmente atrativos. (Preço por página)",
@@ -208,9 +208,9 @@ const productsData: Product[] = [
     title: "Redação",
     category: "Texto",
     price: "R$ 16,00",
-    image: "https://images.unsplash.com/photo-1455390582262-044cdead2708?q=80&w=800&auto=format&fit=crop",
+    image: "https://cdn.discordapp.com/attachments/1422277059723399333/1478135503806140498/IMG-20260301-WA0022.jpg?ex=69a74c76&is=69a5faf6&hm=fbe61fe9dc440468171ee4fa83bc3b30ba7e26bc381fb7363e02d37f471837ef&",
     images: [
-      "https://images.unsplash.com/photo-1455390582262-044cdead2708?q=80&w=800&auto=format&fit=crop"
+      "https://cdn.discordapp.com/attachments/1422277059723399333/1478135503806140498/IMG-20260301-WA0022.jpg?ex=69a74c76&is=69a5faf6&hm=fbe61fe9dc440468171ee4fa83bc3b30ba7e26bc381fb7363e02d37f471837ef&"
     ],
     type: "doc",
     description: "Texto bem desenvolvido e estruturado conforme o tema solicitado.",
@@ -758,7 +758,19 @@ const ProductCard = ({ product, index, onClick }: { product: Product, index: num
   );
 };
 
-const FeaturedSection = ({ onProductClick }: { onProductClick: (p: Product) => void }) => {
+const FeaturedSection = ({ 
+  onProductClick,
+  selectedCategory,
+  onClearFilter
+}: { 
+  onProductClick: (p: Product) => void,
+  selectedCategory: string | null,
+  onClearFilter: () => void
+}) => {
+  const filteredProducts = selectedCategory 
+    ? productsData.filter(p => p.category === selectedCategory)
+    : productsData;
+
   return (
     <section id="templates" className="py-24 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -766,10 +778,26 @@ const FeaturedSection = ({ onProductClick }: { onProductClick: (p: Product) => v
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex justify-between items-end mb-16 border-b-2 border-black pb-4"
+          className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 border-b-2 border-black pb-4 gap-4"
         >
-          <h2 className="font-serif text-4xl md:text-5xl">Mais Populares</h2>
+          <div>
+            <h2 className="font-serif text-4xl md:text-5xl">
+              {selectedCategory ? `Coleção: ${selectedCategory}` : 'Mais Populares'}
+            </h2>
+            {selectedCategory && (
+              <button 
+                onClick={onClearFilter}
+                className="mt-2 text-sm text-gray-500 hover:text-pink-500 underline uppercase tracking-widest font-bold"
+              >
+                Ver todos os produtos
+              </button>
+            )}
+          </div>
           <motion.a 
+            onClick={(e) => {
+              e.preventDefault();
+              onClearFilter();
+            }}
             whileHover={{ x: 5 }}
             href="#" 
             className="hidden md:flex items-center text-sm uppercase tracking-widest font-bold hover:text-pink-500 transition-colors"
@@ -779,9 +807,14 @@ const FeaturedSection = ({ onProductClick }: { onProductClick: (p: Product) => v
         </motion.div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-          {productsData.map((product, index) => (
+          {filteredProducts.map((product, index) => (
             <ProductCard key={product.id} index={index} product={product} onClick={onProductClick} />
           ))}
+          {filteredProducts.length === 0 && (
+            <div className="col-span-full text-center py-12 text-gray-500 italic font-serif text-xl">
+              Nenhum produto encontrado nesta coleção.
+            </div>
+          )}
         </div>
       </div>
     </section>
@@ -1020,7 +1053,7 @@ const Marquee = () => {
   );
 };
 
-const CategoriesSection = () => {
+const CategoriesSection = ({ onSelectCategory }: { onSelectCategory: (category: string) => void }) => {
   return (
     <section className="py-24 bg-pink-50/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1029,6 +1062,10 @@ const CategoriesSection = () => {
           <motion.div 
             initial={{ opacity: 0, x: -50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} whileHover="hover"
             className="relative h-[28rem] border-2 border-black bg-white p-8 group overflow-hidden cursor-pointer shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+            onClick={() => {
+              onSelectCategory("Slide");
+              document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" });
+            }}
           >
             <motion.div variants={{ hover: { scale: 1.1 } }} transition={{ duration: 0.8, ease: "easeOut" }} className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center opacity-80"></motion.div>
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
@@ -1046,6 +1083,10 @@ const CategoriesSection = () => {
           <motion.div 
             initial={{ opacity: 0, x: 50 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} whileHover="hover"
             className="relative h-[28rem] border-2 border-black bg-white p-8 group overflow-hidden cursor-pointer shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+            onClick={() => {
+              onSelectCategory("Planejamento");
+              document.getElementById("templates")?.scrollIntoView({ behavior: "smooth" });
+            }}
           >
             <motion.div variants={{ hover: { scale: 1.1 } }} transition={{ duration: 0.8, ease: "easeOut" }} className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1517842645767-c639042777db?q=80&w=1200&auto=format&fit=crop')] bg-cover bg-center opacity-80"></motion.div>
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
@@ -1070,49 +1111,25 @@ const Footer = () => {
   return (
     <footer className="bg-black text-white pt-24 pb-12 border-t-[16px] border-pink-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-16">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-            <span className="font-serif text-4xl italic block mb-6">EstudyZen</span>
+            <span className="font-serif text-4xl italic block mb-4">EstudyZen</span>
             <p className="text-gray-400 text-sm max-w-xs leading-relaxed">
               Transformando a rotina de estudos de milhares de estudantes com materiais estéticos e altamente funcionais.
             </p>
           </motion.div>
           
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="grid grid-cols-2 gap-8">
-            <div>
-              <h4 className="uppercase tracking-widest text-xs font-bold mb-6 text-gray-500">Loja</h4>
-              <ul className="space-y-4 text-sm">
-                {['Templates', 'Slides', 'E-books', 'Combos'].map(link => (
-                  <li key={link}><a href="#" className="hover:text-pink-300 hover:pl-2 transition-all inline-block">{link}</a></li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h4 className="uppercase tracking-widest text-xs font-bold mb-6 text-gray-500">Ajuda</h4>
-              <ul className="space-y-4 text-sm">
-                {['FAQ', 'Contato', 'Termos'].map(link => (
-                  <li key={link}><a href="#" className="hover:text-pink-300 hover:pl-2 transition-all inline-block">{link}</a></li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }}>
-            <h4 className="uppercase tracking-widest text-xs font-bold mb-6 text-gray-500">Newsletter</h4>
-            <p className="text-xs text-gray-400 mb-4">Receba dicas de estudo e cupons exclusivos.</p>
-            <div className="flex border-b border-white/30 pb-2 focus-within:border-pink-300 transition-colors">
-              <input type="email" placeholder="Seu melhor e-mail" className="bg-transparent w-full outline-none text-sm placeholder-gray-600" />
-              <button className="text-xs uppercase font-bold hover:text-pink-300 transition-colors">Enviar</button>
-            </div>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
+             <a href="https://instagram.com/estudyzen" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6 py-3 border-2 border-white font-bold uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors">
+               Siga no Instagram
+             </a>
           </motion.div>
         </div>
         
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-600">
           <p>&copy; 2026 EstudyZen. Todos os direitos reservados.</p>
           <div className="flex space-x-8 mt-6 md:mt-0">
-            {['Instagram', 'TikTok', 'Pinterest'].map(social => (
-              <motion.a key={social} whileHover={{ y: -2, color: 'white' }} href="#" className="transition-colors">{social}</motion.a>
-            ))}
+            <motion.a whileHover={{ y: -2, color: 'white' }} href="https://instagram.com/estudyzen" target="_blank" rel="noopener noreferrer" className="transition-colors">@estudyzen</motion.a>
           </div>
         </div>
       </div>
@@ -1295,6 +1312,7 @@ const ReviewModal = ({ isOpen, onClose, product }: { isOpen: boolean, onClose: (
 
 export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   
@@ -1339,6 +1357,7 @@ export default function App() {
 
   const handleHomeClick = () => {
     setSelectedProduct(null);
+    setSelectedCategory(null);
     window.scrollTo(0, 0);
   };
 
@@ -1466,8 +1485,12 @@ export default function App() {
           >
             <Hero />
             <Marquee />
-            <FeaturedSection onProductClick={setSelectedProduct} />
-            <CategoriesSection />
+            <FeaturedSection 
+              onProductClick={setSelectedProduct} 
+              selectedCategory={selectedCategory}
+              onClearFilter={() => setSelectedCategory(null)}
+            />
+            <CategoriesSection onSelectCategory={setSelectedCategory} />
           </motion.div>
         )}
       </AnimatePresence>
