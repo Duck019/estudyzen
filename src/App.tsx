@@ -7,7 +7,8 @@ import { User } from '@supabase/supabase-js';
 // --- Mock Data & Interfaces ---
 
 export interface Review {
-  id: number;
+  id: string | number;
+  user_id?: string;
   user: string;
   rating: number;
   date: string;
@@ -244,14 +245,16 @@ const Navbar = ({
   onCartClick,
   user,
   onLoginClick,
-  onLogoutClick
+  onLogoutClick,
+  onProfileClick
 }: { 
   onHomeClick: () => void, 
   cartCount: number, 
   onCartClick: () => void,
   user: User | null,
   onLoginClick: () => void,
-  onLogoutClick: () => void
+  onLogoutClick: () => void,
+  onProfileClick: () => void
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -299,13 +302,17 @@ const Navbar = ({
                 <div className="relative group">
                   <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="p-2 hover:bg-pink-50 rounded-full transition-colors flex items-center gap-2">
                     <div className="w-6 h-6 bg-black text-white rounded-full flex items-center justify-center text-xs font-bold uppercase">
-                      {user.email?.charAt(0) || 'U'}
+                      {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0) || 'U'}
                     </div>
                   </motion.button>
                   <div className="absolute right-0 top-full mt-2 w-48 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
                     <div className="p-3 border-b border-black/10 text-xs text-gray-500 truncate">
+                      <span className="font-bold text-black block mb-0.5">{user.user_metadata?.full_name || 'Estudante'}</span>
                       {user.email}
                     </div>
+                    <button onClick={onProfileClick} className="w-full text-left px-4 py-2 text-sm font-bold hover:bg-pink-50 transition-colors flex items-center gap-2 border-b border-black/10">
+                      <UserIcon size={14} /> Meu Perfil
+                    </button>
                     <button onClick={onLogoutClick} className="w-full text-left px-4 py-2 text-sm font-bold hover:bg-pink-50 transition-colors flex items-center gap-2">
                       <LogOut size={14} /> Sair
                     </button>
@@ -759,17 +766,19 @@ const ProductCard = ({ product, index, onClick }: { product: Product, index: num
 };
 
 const FeaturedSection = ({ 
+  products,
   onProductClick,
   selectedCategory,
   onClearFilter
 }: { 
+  products: Product[],
   onProductClick: (p: Product) => void,
   selectedCategory: string | null,
   onClearFilter: () => void
 }) => {
   const filteredProducts = selectedCategory 
-    ? productsData.filter(p => p.category === selectedCategory)
-    : productsData;
+    ? products.filter(p => p.category === selectedCategory)
+    : products;
 
   return (
     <section id="templates" className="py-24 bg-white relative">
@@ -826,13 +835,19 @@ const ProductDetails = ({
   onBack, 
   onAddToCart,
   onBuyNow,
-  onWriteReview
+  onWriteReview,
+  user,
+  onEditReview,
+  onDeleteReview
 }: { 
   product: Product, 
   onBack: () => void,
   onAddToCart: (p: Product, q: number) => void,
   onBuyNow: (p: Product, q: number) => void,
   onWriteReview: (p: Product) => void,
+  user: User | null,
+  onEditReview: (p: Product, r: Review) => void,
+  onDeleteReview: (r: Review) => void,
   key?: string | number
 }) => {
   const [mainImage, setMainImage] = useState(product.images[0]);
@@ -1017,6 +1032,22 @@ const ProductDetails = ({
                   <span className="font-bold text-black">{review.user}</span>
                   <span>{review.date}</span>
                 </div>
+                {user && user.id === review.user_id && (
+                  <div className="flex gap-2 mt-4 justify-end">
+                    <button 
+                      onClick={() => onEditReview(product, review)}
+                      className="text-xs font-bold uppercase tracking-widest hover:text-pink-500 transition-colors"
+                    >
+                      Editar
+                    </button>
+                    <button 
+                      onClick={() => onDeleteReview(review)}
+                      className="text-xs font-bold uppercase tracking-widest text-red-500 hover:text-red-700 transition-colors"
+                    >
+                      Apagar
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -1137,8 +1168,111 @@ const Footer = () => {
   );
 };
 
+const ProfileModal = ({ isOpen, onClose, user, onProfileUpdated }: { isOpen: boolean, onClose: () => void, user: User | null, onProfileUpdated: () => void }) => {
+  const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (isOpen && user) {
+      setUsername(user.user_metadata?.full_name || '');
+      setError('');
+    }
+  }, [isOpen, user]);
+
+  if (!isOpen || !user) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!supabase) return;
+    setLoading(true);
+    setError('');
+
+    try {
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { full_name: username }
+      });
+
+      if (updateError) throw updateError;
+
+      // Also update the profiles table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ full_name: username })
+        .eq('id', user.id);
+
+      if (profileError) throw profileError;
+
+      alert('Perfil atualizado com sucesso!');
+      onProfileUpdated();
+      onClose();
+    } catch (err: any) {
+      setError(err.message || 'Ocorreu um erro ao atualizar o perfil.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0, y: 20 }} 
+        animate={{ scale: 1, opacity: 1, y: 0 }} 
+        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+        className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] max-w-sm w-full overflow-hidden flex flex-col"
+      >
+        <div className="p-6 border-b-2 border-black bg-pink-50 relative">
+          <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-black hover:text-white border-2 border-transparent hover:border-black rounded-full transition-all">
+            <X size={20} />
+          </button>
+          <h2 className="font-serif text-3xl italic font-bold mb-2">
+            Meu Perfil
+          </h2>
+          <p className="text-sm text-gray-600">
+            Atualize suas informações pessoais.
+          </p>
+        </div>
+
+        <div className="p-6">
+          {error && <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-sm">{error}</div>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest mb-1">Nome de Usuário</label>
+              <input 
+                type="text" 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full border-2 border-black p-3 text-sm outline-none focus:border-pink-500 transition-colors"
+                placeholder="Como quer ser chamado?"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold uppercase tracking-widest mb-1">Email (Não editável)</label>
+              <input 
+                type="email" 
+                value={user.email || ''}
+                disabled
+                className="w-full border-2 border-black p-3 text-sm outline-none bg-gray-100 text-gray-500 cursor-not-allowed"
+              />
+            </div>
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="w-full py-3 bg-black text-white border-2 border-black font-bold uppercase tracking-widest text-sm shadow-[4px_4px_0px_0px_rgba(244,114,182,1)] hover:bg-gray-900 disabled:opacity-50"
+            >
+              {loading ? 'Salvando...' : 'Salvar Alterações'}
+            </button>
+          </form>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 const AuthModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
   const [isLogin, setIsLogin] = useState(true);
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -1160,9 +1294,17 @@ const AuthModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
       } else {
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { error } = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: {
+            data: {
+              full_name: username
+            }
+          }
+        });
         if (error) throw error;
-        alert('Confirme seu email para continuar!');
+        alert('Conta criada com sucesso! Você já pode avaliar os produtos.');
       }
       onClose();
     } catch (err: any) {
@@ -1188,13 +1330,26 @@ const AuthModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
             {isLogin ? 'Bem-vindo de volta' : 'Crie sua conta'}
           </h2>
           <p className="text-sm text-gray-600">
-            {isLogin ? 'Entre para avaliar produtos e ver seus pedidos.' : 'Junte-se a milhares de estudantes.'}
+            {isLogin ? 'Entre para avaliar produtos e salvar seus favoritos.' : 'Cadastre-se para avaliar os materiais e ajudar outros estudantes!'}
           </p>
         </div>
 
         <div className="p-6">
           {error && <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-sm">{error}</div>}
           <form onSubmit={handleSubmit} className="space-y-4">
+            {!isLogin && (
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-widest mb-1">Nome de Usuário</label>
+                <input 
+                  type="text" 
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full border-2 border-black p-3 text-sm outline-none focus:border-pink-500 transition-colors"
+                  placeholder="Como quer ser chamado?"
+                  required={!isLogin}
+                />
+              </div>
+            )}
             <div>
               <label className="block text-xs font-bold uppercase tracking-widest mb-1">Email</label>
               <input 
@@ -1241,17 +1396,75 @@ const AuthModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }
   );
 };
 
-const ReviewModal = ({ isOpen, onClose, product }: { isOpen: boolean, onClose: () => void, product: Product | null }) => {
+const ReviewModal = ({ 
+  isOpen, 
+  onClose, 
+  product,
+  user,
+  reviewToEdit,
+  onReviewSubmitted
+}: { 
+  isOpen: boolean, 
+  onClose: () => void, 
+  product: Product | null,
+  user: User | null,
+  reviewToEdit?: Review | null,
+  onReviewSubmitted: () => void
+}) => {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (reviewToEdit) {
+        setRating(reviewToEdit.rating);
+        setComment(reviewToEdit.comment);
+      } else {
+        setRating(5);
+        setComment('');
+      }
+    }
+  }, [isOpen, reviewToEdit]);
 
   if (!isOpen || !product) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would save this to Supabase here
-    alert('Avaliação enviada com sucesso! (Simulação)');
-    onClose();
+    if (!user || !supabase) return;
+    
+    setIsSubmitting(true);
+    try {
+      if (reviewToEdit) {
+        const { error } = await supabase
+          .from('reviews')
+          .update({
+            rating,
+            comment
+          })
+          .eq('id', reviewToEdit.id);
+          
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('reviews')
+          .insert({
+            product_id: product.id,
+            user_id: user.id,
+            rating,
+            comment
+          });
+          
+        if (error) throw error;
+      }
+      
+      onReviewSubmitted();
+      onClose();
+    } catch (err: any) {
+      alert('Erro ao enviar avaliação: ' + err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -1266,7 +1479,9 @@ const ReviewModal = ({ isOpen, onClose, product }: { isOpen: boolean, onClose: (
           <button onClick={onClose} className="absolute top-4 right-4 p-2 hover:bg-black hover:text-white border-2 border-transparent hover:border-black rounded-full transition-all">
             <X size={20} />
           </button>
-          <h2 className="font-serif text-2xl italic font-bold mb-2">Avaliar Produto</h2>
+          <h2 className="font-serif text-2xl italic font-bold mb-2">
+            {reviewToEdit ? 'Editar Avaliação' : 'Avaliar Produto'}
+          </h2>
           <p className="text-sm text-gray-600 truncate">{product.title}</p>
         </div>
 
@@ -1299,9 +1514,10 @@ const ReviewModal = ({ isOpen, onClose, product }: { isOpen: boolean, onClose: (
             </div>
             <button 
               type="submit" 
-              className="w-full py-3 bg-black text-white border-2 border-black font-bold uppercase tracking-widest text-sm shadow-[4px_4px_0px_0px_rgba(244,114,182,1)] hover:bg-gray-900"
+              disabled={isSubmitting}
+              className="w-full py-3 bg-black text-white border-2 border-black font-bold uppercase tracking-widest text-sm shadow-[4px_4px_0px_0px_rgba(244,114,182,1)] hover:bg-gray-900 disabled:opacity-50"
             >
-              Enviar Avaliação
+              {isSubmitting ? 'Enviando...' : 'Enviar Avaliação'}
             </button>
           </form>
         </div>
@@ -1311,6 +1527,7 @@ const ReviewModal = ({ isOpen, onClose, product }: { isOpen: boolean, onClose: (
 };
 
 export default function App() {
+  const [products, setProducts] = useState<Product[]>(productsData);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -1325,6 +1542,8 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [productToReview, setProductToReview] = useState<Product | null>(null);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [reviewToEdit, setReviewToEdit] = useState<Review | null>(null);
 
   useEffect(() => {
     if (supabase) {
@@ -1340,6 +1559,66 @@ export default function App() {
     }
   }, []);
 
+  const loadReviews = async () => {
+    if (!supabase) return;
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`
+        id,
+        product_id,
+        user_id,
+        rating,
+        comment,
+        created_at,
+        profiles (
+          full_name
+        )
+      `);
+
+    if (error) {
+      console.error('Error fetching reviews:', error);
+      return;
+    }
+
+    if (data) {
+      setProducts(prevProducts => {
+        const newProducts = prevProducts.map(p => {
+          const productReviews = data.filter(r => r.product_id === p.id).map(r => ({
+            id: r.id,
+            user_id: r.user_id,
+            user: (r.profiles as any)?.full_name || 'Estudante',
+            rating: r.rating,
+            date: new Date(r.created_at).toLocaleDateString('pt-BR'),
+            comment: r.comment
+          }));
+
+          const reviewsCount = productReviews.length;
+          const rating = reviewsCount > 0 
+            ? Number((productReviews.reduce((sum, r) => sum + r.rating, 0) / reviewsCount).toFixed(1))
+            : 5.0;
+
+          return {
+            ...p,
+            reviews: productReviews,
+            reviewsCount,
+            rating
+          };
+        });
+        
+        setSelectedProduct(current => {
+          if (!current) return null;
+          return newProducts.find(p => p.id === current.id) || current;
+        });
+        
+        return newProducts;
+      });
+    }
+  };
+
+  useEffect(() => {
+    loadReviews();
+  }, []);
+
   const handleLogout = async () => {
     if (supabase) {
       await supabase.auth.signOut();
@@ -1349,9 +1628,34 @@ export default function App() {
   const handleWriteReview = (product: Product) => {
     if (user) {
       setProductToReview(product);
+      setReviewToEdit(null);
       setIsReviewModalOpen(true);
     } else {
       setIsAuthModalOpen(true);
+    }
+  };
+
+  const handleEditReview = (product: Product, review: Review) => {
+    setProductToReview(product);
+    setReviewToEdit(review);
+    setIsReviewModalOpen(true);
+  };
+
+  const handleDeleteReview = async (review: Review) => {
+    if (!supabase) return;
+    const confirm = window.confirm('Tem certeza que deseja apagar esta avaliação?');
+    if (!confirm) return;
+
+    try {
+      const { error } = await supabase
+        .from('reviews')
+        .delete()
+        .eq('id', review.id);
+
+      if (error) throw error;
+      loadReviews();
+    } catch (err: any) {
+      alert('Erro ao apagar avaliação: ' + err.message);
     }
   };
 
@@ -1437,6 +1741,7 @@ export default function App() {
         user={user}
         onLoginClick={() => setIsAuthModalOpen(true)}
         onLogoutClick={handleLogout}
+        onProfileClick={() => setIsProfileModalOpen(true)}
       />
       
       <AuthModal 
@@ -1444,10 +1749,26 @@ export default function App() {
         onClose={() => setIsAuthModalOpen(false)} 
       />
 
+      <ProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        user={user}
+        onProfileUpdated={() => {
+          // Refresh user session to get updated metadata
+          if (supabase) {
+            supabase.auth.refreshSession();
+            loadReviews();
+          }
+        }}
+      />
+
       <ReviewModal 
         isOpen={isReviewModalOpen} 
         onClose={() => setIsReviewModalOpen(false)} 
         product={productToReview}
+        user={user}
+        reviewToEdit={reviewToEdit}
+        onReviewSubmitted={loadReviews}
       />
       
       <CartSidebar 
@@ -1475,6 +1796,9 @@ export default function App() {
             onAddToCart={addToCart}
             onBuyNow={handleBuyNow}
             onWriteReview={handleWriteReview}
+            user={user}
+            onEditReview={handleEditReview}
+            onDeleteReview={handleDeleteReview}
           />
         ) : (
           <motion.div 
@@ -1486,6 +1810,7 @@ export default function App() {
             <Hero />
             <Marquee />
             <FeaturedSection 
+              products={products}
               onProductClick={setSelectedProduct} 
               selectedCategory={selectedCategory}
               onClearFilter={() => setSelectedCategory(null)}
